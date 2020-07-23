@@ -29,7 +29,7 @@ const useStyles = makeStyles({
   },
 });
 
-const LogBlogger = ({ addBlogger }) => {
+const LogBlogger = (props) => {
   const initialState = {
     interests: {
       vpn1: false,
@@ -55,7 +55,8 @@ const LogBlogger = ({ addBlogger }) => {
   };
 
   const signUp = () => {
-    addBlogger(state);
+    props.addBlogger(state);
+    console.log(props.bloggers)
     setState(initialState);
   };
 
@@ -123,5 +124,6 @@ const LogBlogger = ({ addBlogger }) => {
     </div>
   );
 };
+const mapStateToProrps = ({ bloggers }) => ({ bloggers });
 
-export default connect(null, { addBlogger })(LogBlogger);
+export default connect(mapStateToProrps, { addBlogger })(LogBlogger);

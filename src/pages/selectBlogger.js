@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import MaterialTable from "material-table";
 import { connect } from "react-redux";
 import columns from "../constants/columns";
@@ -6,7 +6,7 @@ import { Checkbox, makeStyles } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 import axios from "axios";
 import getEmails from "../utils/getEmails";
-
+import interestsToString from "../utils/interestsToString";
 export const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -26,14 +26,15 @@ export const useStyles = makeStyles((theme) => ({
 const SelectBlogger = ({ bloggers }) => {
   const [state, setState] = useState([]);
   const classes = useStyles(state);
-
+  console.log(bloggers)
+  const bloggersToDisplay = useMemo(() => interestsToString(bloggers), [
+    bloggers,
+  ]);
   const sendEmail = async () => {
     const emails = getEmails(state, bloggers);
     try {
       await axios.post("http://localhost:3000/bloggers", emails);
-      console.log(emails);
     } catch (e) {
-      console.log(e);
     }
     setState([]);
   };
@@ -59,7 +60,7 @@ const SelectBlogger = ({ bloggers }) => {
         title={"Active Bloggers"}
         options={{ sorting: true, search: false, filtering: true }}
         columns={columns}
-        data={bloggers}
+        data={bloggersToDisplay}
         actions={[
           {
             icon: () => null,
